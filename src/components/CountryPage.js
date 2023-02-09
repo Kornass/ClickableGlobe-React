@@ -1,9 +1,15 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 function CountryPage() {
+  const navigate = useNavigate();
   let { country } = useParams();
-  return <div>CountryPage</div>;
+  return (
+    <div>
+      <h1>Hello in {country}!</h1>
+      <button onClick={() => navigate(-1)}>Go back</button>
+    </div>
+  );
 }
 
 export default CountryPage;

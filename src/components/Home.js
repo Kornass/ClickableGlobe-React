@@ -1,13 +1,13 @@
 import React, { useRef, useLayoutEffect } from "react";
-
 import * as am5 from "@amcharts/amcharts5";
-
 import * as am5map from "@amcharts/amcharts5/map";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 import am5geodata_worldLow from "@amcharts/amcharts5-geodata/worldLow";
+import { useNavigate } from "react-router-dom";
 // am5.useTheme(am5themes_Animated);
 
 function Home(props) {
+  const navigate = useNavigate();
   useLayoutEffect(() => {
     // CREAETE A ROOT ELEMENT
     let root = am5.Root.new("chartdiv");
@@ -22,7 +22,6 @@ function Home(props) {
         // SETTING A ROTATION ON PAN
         panX: "rotateX",
         // panY: "rotateY",
-
         panBehavior: "rotateLongLang",
         //ZOOMING
         wheelY: "zoom",
@@ -62,19 +61,18 @@ function Home(props) {
     // polygonSeries.data.push({
     //   geometry: am5map.getGeoCircle({ latitude: 48.86, longitude: 2.35 }, 10),
     // });
+
     // CHANGING COLOR ON HOVER
     polygonSeries.mapPolygons.template.states.create("hover", {
       fill: root.interfaceColors.get("primaryButtonHover"),
     });
     // SETTING COLOR OF ACTIVE COUNTRY
-    polygonSeries.mapPolygons.template.states.create("active", {
-      fill: root.interfaceColors.get("primaryButtonHover"),
-    });
-    // polygonSeries.mapPolygons.template.url =
-    //   "http://localhost:3001/?country={id}";
-    // polygonSeries.mapPolygons.template.urlTarget = "_blank";
+    // polygonSeries.mapPolygons.template.states.create("active", {
+    //   fill: root.interfaceColors.get("primaryButtonHover"),
+    // });
+
     polygonSeries.mapPolygons.template.events.once("click", function (ev) {
-      console.log("Clicked on a country", ev.target._dataItem.dataContext.id);
+      navigate(`/${ev.target._dataItem.dataContext.name}`);
     });
 
     // CREATING BACKGROUND FILL
@@ -90,14 +88,13 @@ function Home(props) {
     backgroundSeries.data.push({
       geometry: am5map.getGeoRectangle(90, 180, -90, -180),
     });
-    // let animation;
-    // setTimeout(function () {
-    //   animation = chart.animate(
-    //     { property: "deltaLongitude", to: 100000 },
-    //     20000000
-    //   );
-    // }, 3000);
-
+    chart.animate({
+      key: "rotationX",
+      from: 0,
+      to: 360,
+      duration: 20000,
+      loops: Infinity,
+    });
     // DISPOSING OUR MAP TO RENDER
     return () => {
       // chart.appear();
